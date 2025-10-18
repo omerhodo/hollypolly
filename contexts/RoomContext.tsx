@@ -98,7 +98,7 @@ export function RoomProvider({ children }: { children: ReactNode }) {
           'postgres_changes',
           { event: 'INSERT', schema: 'public', table: 'options', filter: `room_id=eq.${roomId}` },
           (payload) => {
-            console.log('🆕 Option added:', payload.new);
+            console.log('🆕 Option added via realtime:', payload.new);
             setOptions((prev) => [...prev, payload.new as Option]);
           }
         )
@@ -106,8 +106,11 @@ export function RoomProvider({ children }: { children: ReactNode }) {
           'postgres_changes',
           { event: 'DELETE', schema: 'public', table: 'options', filter: `room_id=eq.${roomId}` },
           (payload) => {
-            console.log('🗑️ Option deleted:', payload.old);
-            setOptions((prev) => prev.filter((opt) => opt.id !== payload.old.id));
+            setOptions((prev) => {
+              const filtered = prev.filter((opt) => opt.id !== payload.old?.id);
+              console.log('🔄 Options after realtime delete:', filtered.length);
+              return filtered;
+            });
           }
         );
 
@@ -144,13 +147,22 @@ export function RoomProvider({ children }: { children: ReactNode }) {
   };
 
   const deleteOption = async (optionId: string) => {
+
     const { error } = await supabase
       .from('options')
       .delete()
       .eq('id', optionId);
 
     if (error) {
-      console.error('Error deleting option:', error);
+      console.error('❌ Error deleting option:', error);
+      throw error;
+    } else {
+      console.log('✅ Option deleted successfully:', optionId);
+      setOptions((prev) => {
+        const filtered = prev.filter((opt) => opt.id !== optionId);
+        console.log('🔄 Local state updated, remaining options:', filtered.length);
+        return filtered;
+      });
     }
   };
 

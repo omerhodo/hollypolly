@@ -27,6 +27,14 @@ export default function OptionList({ options, users, currentUser, roomTitle }: O
     setNewOption('');
   };
 
+  const handleDeleteOption = async (optionId: string) => {
+    try {
+      await deleteOption(optionId);
+    } catch (error) {
+      console.error('Error deleting option:', error);
+    }
+  };
+
   return (
     <div className="bg-white rounded-2xl shadow-lg p-6">
         <form onSubmit={handleAddOption} className="mb-8">
@@ -66,9 +74,10 @@ export default function OptionList({ options, users, currentUser, roomTitle }: O
               <p className="text-gray-800 font-medium flex-1">{option.text}</p>
               {isAdmin && (
                 <button
-                  onClick={() => deleteOption(option.id)}
+                  onClick={() => handleDeleteOption(option.id)}
                   className="px-3 py-1 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors text-sm font-medium border border-red-500 hover:border-red-600 cursor-pointer"
                   title={t('options.delete')}
+                  type="button"
                 >
                   🗑️
                 </button>
