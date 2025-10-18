@@ -16,6 +16,7 @@ interface RoomContextType {
   makeAdmin: (userId: string) => Promise<void>;
   selectResult: (type: 'winner' | 'loser') => Promise<void>;
   restartRoom: () => Promise<void>;
+  updateRoomTitle: (title: string) => Promise<void>;
 }
 
 const RoomContext = createContext<RoomContextType | undefined>(undefined);
@@ -189,6 +190,19 @@ export function RoomProvider({ children }: { children: ReactNode }) {
     await supabase.from('options').delete().eq('room_id', room.id);
   };
 
+  const updateRoomTitle = async (title: string) => {
+    if (!room) return;
+
+    const { error } = await supabase
+      .from('rooms')
+      .update({ title } as any)
+      .eq('id', room.id);
+
+    if (error) {
+      console.error('Error updating room title:', error);
+    }
+  };
+
   useEffect(() => {
     return () => {
       if (channel) {
@@ -210,6 +224,7 @@ export function RoomProvider({ children }: { children: ReactNode }) {
         makeAdmin,
         selectResult,
         restartRoom,
+        updateRoomTitle,
       }}
     >
       {children}

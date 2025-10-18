@@ -9,9 +9,10 @@ interface OptionListProps {
   options: Option[];
   users: User[];
   currentUser: User | null;
+  roomTitle?: string;
 }
 
-export default function OptionList({ options, users, currentUser }: OptionListProps) {
+export default function OptionList({ options, users, currentUser, roomTitle }: OptionListProps) {
   const { addOption, deleteOption, selectResult } = useRoom();
   const [newOption, setNewOption] = useState('');
   const isAdmin = currentUser?.is_admin || false;
@@ -27,6 +28,11 @@ export default function OptionList({ options, users, currentUser }: OptionListPr
   return (
     <div className="bg-white rounded-2xl shadow-lg p-6">
       <div className="mb-6">
+        {roomTitle && (
+          <div className="mb-4 p-4 bg-gradient-to-r from-orange-50 to-orange-100 rounded-xl border-2 border-orange-200">
+            <h3 className="text-xl font-bold text-orange-600 text-center">🎯 {roomTitle}</h3>
+          </div>
+        )}
         <h2 className="text-2xl font-bold text-gray-800 mb-4">📝 Seçenekler</h2>
 
         <form onSubmit={handleAddOption} className="mb-4">

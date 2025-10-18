@@ -5,16 +5,18 @@ import { useState } from 'react';
 
 interface NameInputModalProps {
   isOpen: boolean;
-  onSubmit: (name: string) => void;
+  onSubmit: (name: string, title: string) => void;
+  isAdmin: boolean;
 }
 
-export default function NameInputModal({ isOpen, onSubmit }: NameInputModalProps) {
+export default function NameInputModal({ isOpen, onSubmit, isAdmin }: NameInputModalProps) {
   const [name, setName] = useState('');
+  const [title, setTitle] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (name.trim()) {
-      onSubmit(name.trim());
+    if (name.trim() && (!isAdmin || title.trim())) {
+      onSubmit(name.trim(), title.trim());
     }
   };
 
@@ -40,18 +42,40 @@ export default function NameInputModal({ isOpen, onSubmit }: NameInputModalProps
               <div className="text-center mb-6">
                 <div className="text-6xl mb-4">👋</div>
                 <h2 className="text-3xl font-bold text-gray-800 mb-2">Hoş Geldin!</h2>
-                <p className="text-gray-600">Kuraya dahil olmak için isminizi girin</p>
+                <p className="text-gray-600">{isAdmin ? 'Kuranızı oluşturun' : 'Kuraya dahil olmak için isminizi girin'}</p>
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-4">
+                {isAdmin && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Kuranın Başlığı
+                    </label>
+                    <input
+                      type="text"
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                      placeholder="Örn: Yemek Seçimi, Film Kuraları..."
+                      maxLength={50}
+                      autoFocus
+                      className="w-full px-4 py-3 border-2 border-stone-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-orange-600 placeholder:text-stone-400 text-lg"
+                    />
+                    <p className="text-xs text-gray-500 mt-2">
+                      {title.length}/50 karakter
+                    </p>
+                  </div>
+                )}
                 <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    İsminiz
+                  </label>
                   <input
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="İsminizi yazın..."
                     maxLength={30}
-                    autoFocus
+                    autoFocus={!isAdmin}
                     className="w-full px-4 py-3 border-2 border-stone-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-orange-600 placeholder:text-stone-400 text-lg"
                   />
                   <p className="text-xs text-gray-500 mt-2">
@@ -61,10 +85,10 @@ export default function NameInputModal({ isOpen, onSubmit }: NameInputModalProps
 
                 <button
                   type="submit"
-                  disabled={!name.trim()}
+                  disabled={!name.trim() || (isAdmin && !title.trim())}
                   className="w-full py-3 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:from-orange-500 disabled:hover:to-orange-600"
                 >
-                  Kuraya katıl 🚀
+                  {isAdmin ? 'Kurayı Oluştur 🎯' : 'Kuraya Katıl 🚀'}
                 </button>
               </form>
 

@@ -16,7 +16,7 @@ export default function RoomPage() {
   const params = useParams();
   const roomId = params.roomId as string;
   const { currentUser, initializeUser } = useUser();
-  const { room, users, options, loading, initializeRoom } = useRoom();
+  const { room, users, options, loading, initializeRoom, updateRoomTitle } = useRoom();
   const [initializing, setInitializing] = useState(true);
   const [showNameModal, setShowNameModal] = useState(false);
   const [userName, setUserName] = useState<string | null>(null);
@@ -84,14 +84,18 @@ export default function RoomPage() {
     };
   }, [roomId, currentUser]);
 
-  const handleNameSubmit = async (name: string) => {
-    console.log('👤 Name submitted:', name);
+  const handleNameSubmit = async (name: string, title: string) => {
     setUserName(name);
     setShowNameModal(false);
     setInitializing(true);
 
     try {
       await initializeUser(roomId, name);
+
+      if (title && currentUser?.is_admin) {
+        await updateRoomTitle(title);
+      }
+
       console.log('✅ User initialized with name:', name);
     } catch (error) {
       console.error('❌ Error creating user:', error);
@@ -145,7 +149,8 @@ export default function RoomPage() {
   }, [currentUser, room, roomId]);
 
   if (showNameModal && !initializing && !currentUser) {
-    return <NameInputModal isOpen={showNameModal} onSubmit={handleNameSubmit} />;
+    const isFirstUser = users.length === 0;
+    return <NameInputModal isOpen={showNameModal} onSubmit={handleNameSubmit} isAdmin={isFirstUser} />;
   }
 
   if (initializing || loading || !currentUser) {
@@ -197,6 +202,7 @@ export default function RoomPage() {
               options={options}
               users={users}
               currentUser={currentUser}
+              roomTitle={room?.title}
             />
           </div>
         </div>
