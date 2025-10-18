@@ -27,6 +27,20 @@ export function RoomProvider({ children }: { children: ReactNode }) {
   const [options, setOptions] = useState<Option[]>([]);
   const [loading, setLoading] = useState(true);
   const [channel, setChannel] = useState<RealtimeChannel | null>(null);
+  const [isRealtimeActive, setIsRealtimeActive] = useState(false);
+
+  // Fix this issue later: ensure fetchLatestOptions is called when room changes
+  const fetchLatestOptions = async (roomId: string) => {
+    const { data } = await supabase
+      .from('options')
+      .select('*')
+      .eq('room_id', roomId)
+      .order('created_at', { ascending: true });
+
+    if (data) {
+      setOptions(data);
+    }
+  };
 
   const initializeRoom = async (roomId: string) => {
     setLoading(true);
@@ -66,7 +80,14 @@ export function RoomProvider({ children }: { children: ReactNode }) {
 
       setOptions(roomOptions || []);
 
-      const newChannel = supabase.channel(`room:${roomId}`);
+      if (channel) {
+        await supabase.removeChannel(channel);
+      }
+
+      const channelName = `room-${roomId}-${Date.now()}`;
+      console.log('🔌 Creating channel:', channelName);
+
+      const newChannel = supabase.channel(channelName);
 
       newChannel
         .on(
@@ -122,8 +143,16 @@ export function RoomProvider({ children }: { children: ReactNode }) {
         }
       );
 
-      newChannel.subscribe((status) => {
-        console.log('📡 Realtime subscription status:', status);
+      newChannel.subscribe((status, err) => {
+        if (status === 'SUBSCRIBED') {
+          setIsRealtimeActive(true);
+        } else if (status === 'CHANNEL_ERROR') {
+          setIsRealtimeActive(false);
+        } else if (status === 'TIMED_OUT') {
+          setIsRealtimeActive(false);
+        } else if (status === 'CLOSED') {
+          setIsRealtimeActive(false);
+        }
       });
       setChannel(newChannel);
     } catch (error) {
@@ -143,6 +172,8 @@ export function RoomProvider({ children }: { children: ReactNode }) {
 
     if (error) {
       console.error('Error adding option:', error);
+    } else {
+      await fetchLatestOptions(room.id);
     }
   };
 
@@ -157,12 +188,10 @@ export function RoomProvider({ children }: { children: ReactNode }) {
       console.error('❌ Error deleting option:', error);
       throw error;
     } else {
-      console.log('✅ Option deleted successfully:', optionId);
-      setOptions((prev) => {
-        const filtered = prev.filter((opt) => opt.id !== optionId);
-        console.log('🔄 Local state updated, remaining options:', filtered.length);
-        return filtered;
-      });
+
+      if (room) {
+        await fetchLatestOptions(room.id);
+      }
     }
   };
 
@@ -224,6 +253,26 @@ export function RoomProvider({ children }: { children: ReactNode }) {
       }
     };
   }, [channel]);
+
+  useEffect(() => {
+    if (!room) return;
+
+    const pollInterval = setInterval(async () => {
+      const { data } = await supabase
+        .from('options')
+        .select('*')
+        .eq('room_id', room.id)
+        .order('created_at', { ascending: true });
+
+      if (data && JSON.stringify(data) !== JSON.stringify(options)) {
+        setOptions(data);
+      }
+    }, 3000);
+
+    return () => {
+      clearInterval(pollInterval);
+    };
+  }, [room, options]);
 
   return (
     <RoomContext.Provider
