@@ -107,7 +107,6 @@ export function UserProvider({ children }: { children: ReactNode }) {
             const shouldBeAdmin = count === 0 || count === null;
             const userToInsert = { ...user, is_admin: shouldBeAdmin, last_seen: new Date().toISOString() };
 
-            // upsert kullanarak duplicate insert'i önle
             const { data: insertedUser, error } = await supabase
               .from('users')
               .upsert(userToInsert, { onConflict: 'id' })
