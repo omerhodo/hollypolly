@@ -1,8 +1,8 @@
 'use client';
 
-import NameInputModal from '@/components/NameInputModal';
 import OptionList from '@/components/OptionList';
 import ResultModal from '@/components/ResultModal';
+import RoomEntranceModal from '@/components/RoomEntranceModal';
 import ShareButton from '@/components/ShareButton';
 import UserList from '@/components/UserList';
 import { useRoom } from '@/contexts/RoomContext';
@@ -156,7 +156,14 @@ export default function RoomPage() {
   }, [currentUser, room, roomId]);
 
   if (showNameModal && !initializing && !currentUser) {
-    return <NameInputModal isOpen={showNameModal} onSubmit={handleNameSubmit} isAdmin={isFirstUser} />;
+    return (
+      <RoomEntranceModal
+        isOpen={showNameModal}
+        onSubmit={handleNameSubmit}
+        isAdmin={isFirstUser}
+        existingTitle={room?.title}
+      />
+    );
   }
 
   if (initializing || loading || !currentUser) {

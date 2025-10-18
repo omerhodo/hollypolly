@@ -3,13 +3,14 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
 
-interface NameInputModalProps {
+interface RoomEntranceModalProps {
   isOpen: boolean;
   onSubmit: (name: string, title: string) => void;
   isAdmin: boolean;
+  existingTitle?: string;
 }
 
-export default function NameInputModal({ isOpen, onSubmit, isAdmin }: NameInputModalProps) {
+export default function RoomEntranceModal({ isOpen, onSubmit, isAdmin, existingTitle }: RoomEntranceModalProps) {
   const [name, setName] = useState('');
   const [title, setTitle] = useState('');
 
@@ -42,7 +43,16 @@ export default function NameInputModal({ isOpen, onSubmit, isAdmin }: NameInputM
               <div className="text-center mb-6">
                 <div className="text-6xl mb-4">👋</div>
                 <h2 className="text-3xl font-bold text-gray-800 mb-2">Hoş Geldin!</h2>
-                <p className="text-gray-600">{isAdmin ? 'Kuranızı oluşturun' : 'Kuraya dahil olmak için isminizi girin'}</p>
+                {existingTitle && !isAdmin ? (
+                  <div className="mt-3">
+                    <p className="text-gray-600 mb-2">Kuraya dahil oluyorsunuz:</p>
+                    <div className="inline-block px-4 py-2 bg-gradient-to-r from-orange-50 to-orange-100 rounded-xl border-2 border-orange-200">
+                      <p className="text-lg font-bold text-orange-600">🎯 {existingTitle}</p>
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-gray-600">{isAdmin ? 'Kuranızı oluşturun' : 'Kuraya dahil olmak için isminizi girin'}</p>
+                )}
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-4">
