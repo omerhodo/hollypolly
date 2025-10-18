@@ -60,9 +60,6 @@ export default function RoomEntranceModal({ isOpen, onSubmit, isAdmin, existingT
               <form onSubmit={handleSubmit} className="space-y-4">
                 {isAdmin && (
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      {t('drawTitle')}
-                    </label>
                     <input
                       type="text"
                       value={title}
@@ -78,9 +75,6 @@ export default function RoomEntranceModal({ isOpen, onSubmit, isAdmin, existingT
                   </div>
                 )}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    {t('yourName')}
-                  </label>
                   <input
                     type="text"
                     value={name}
