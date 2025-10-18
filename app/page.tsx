@@ -1,11 +1,13 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 export default function HomePage() {
+  const t = useTranslations('loading');
   const router = useRouter();
 
   useEffect(() => {
@@ -31,10 +33,10 @@ export default function HomePage() {
           className="w-20 h-20 border-4 border-orange-500 border-t-transparent rounded-full mx-auto mb-6"
         />
         <h1 className="text-3xl font-bold text-gray-800 mb-2">
-          Kura çekilecek odaya yönlendiriliyorsunuz...
+          {t('title')}
         </h1>
         <p className="text-gray-600">
-          Lütfen bekleyin, sizi yönlendiriyoruz
+          {t('subtitle')}
         </p>
       </motion.div>
     </div>

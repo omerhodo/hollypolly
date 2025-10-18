@@ -3,6 +3,7 @@
 import { useRoom } from '@/contexts/RoomContext';
 import type { Option, User } from '@/types';
 import { motion } from 'framer-motion';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
 interface OptionListProps {
@@ -13,6 +14,7 @@ interface OptionListProps {
 }
 
 export default function OptionList({ options, users, currentUser, roomTitle }: OptionListProps) {
+  const t = useTranslations();
   const { addOption, deleteOption, selectResult } = useRoom();
   const [newOption, setNewOption] = useState('');
   const isAdmin = currentUser?.is_admin || false;
@@ -30,10 +32,10 @@ export default function OptionList({ options, users, currentUser, roomTitle }: O
       <div className="mb-6">
         {roomTitle && (
           <div className="mb-4 p-4 bg-gradient-to-r from-orange-50 to-orange-100 rounded-xl border-2 border-orange-200">
-            <h3 className="text-md font-bold text-center text-gray-600">🎯 Kura Adı: <span className="font-mono text-xl font-bold text-orange-600">{roomTitle}</span></h3>
+            <h3 className="text-md font-bold text-center text-gray-600">🎯 {t('room.drawName')}: <span className="font-mono text-xl font-bold text-orange-600">{roomTitle}</span></h3>
           </div>
         )}
-        <h2 className="text-2xl font-bold text-gray-800 mb-4">📝 Seçenekler</h2>
+        <h2 className="text-2xl font-bold text-gray-800 mb-4">📝 {t('options.title')}</h2>
 
         <form onSubmit={handleAddOption} className="mb-4">
           <div className="flex gap-2">
@@ -41,7 +43,7 @@ export default function OptionList({ options, users, currentUser, roomTitle }: O
               type="text"
               value={newOption}
               onChange={(e) => setNewOption(e.target.value)}
-              placeholder="Yeni seçenek ekle..."
+              placeholder={t('options.addPlaceholder')}
               className="flex-1 px-4 py-2 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 text-orange-600 placeholder:text-stone-400"
             />
             <button
@@ -49,7 +51,7 @@ export default function OptionList({ options, users, currentUser, roomTitle }: O
               disabled={!newOption.trim()}
               className="px-6 py-2 bg-white border-2 border-orange-500 text-orange-600 rounded-lg hover:bg-orange-50 hover:border-orange-600 disabled:border-stone-300 disabled:text-stone-400 disabled:cursor-not-allowed transition-all"
             >
-              Ekle
+              {t('options.add')}
             </button>
           </div>
         </form>
@@ -68,7 +70,7 @@ export default function OptionList({ options, users, currentUser, roomTitle }: O
                 <button
                   onClick={() => deleteOption(option.id)}
                   className="px-3 py-1 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors text-sm font-medium border border-red-500 hover:border-red-600 cursor-pointer"
-                  title="Sil"
+                  title={t('options.delete')}
                 >
                   🗑️
                 </button>
@@ -78,7 +80,7 @@ export default function OptionList({ options, users, currentUser, roomTitle }: O
 
           {options.length === 0 && (
             <div className="text-center py-8 text-gray-400">
-              Seçenek ekleyerek başlayın
+              {t('options.noOptions')}
             </div>
           )}
         </div>
@@ -86,9 +88,9 @@ export default function OptionList({ options, users, currentUser, roomTitle }: O
 
       {isAdmin && options.length > 0 && (
         <div className="border-t pt-6">
-          <h3 className="text-xl font-bold text-gray-800 mb-4">🎯 Sonuç Seç</h3>
+          <h3 className="text-xl font-bold text-gray-800 mb-4">🎯 {t('result.title')}</h3>
           <p className="text-sm text-gray-600 mb-4">
-            Butona tıklayınca seçenekler arasından rastgele kazanan veya kaybeden seçilir
+            {t('result.description')}
           </p>
 
           <div className="flex gap-4">
@@ -96,13 +98,13 @@ export default function OptionList({ options, users, currentUser, roomTitle }: O
               onClick={() => selectResult('winner')}
               className="flex-1 px-6 py-4 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-xl transition-all font-bold shadow-lg hover:shadow-xl transform hover:scale-105 text-lg"
             >
-              🏆 Kazanan Seç
+              🏆 {t('result.selectWinner')}
             </button>
             <button
               onClick={() => selectResult('loser')}
               className="flex-1 px-6 py-4 bg-white border-2 border-red-500 hover:border-red-600 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-xl transition-all font-bold shadow-sm hover:shadow-md transform hover:scale-105 text-lg"
             >
-              💔 Kaybeden Seç
+              💔 {t('result.selectLoser')}
             </button>
           </div>
         </div>

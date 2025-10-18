@@ -1,6 +1,8 @@
 import { RoomProvider } from "@/contexts/RoomContext";
 import { UserProvider } from "@/contexts/UserContext";
 import type { Metadata } from "next";
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages } from 'next-intl/server';
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -19,21 +21,25 @@ export const metadata: Metadata = {
   description: "Arkadaşlarınla gerçek zamanlı olarak kura çek!",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const messages = await getMessages();
+
   return (
     <html lang="tr">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-orange-50 min-h-screen`}
       >
-        <UserProvider>
-          <RoomProvider>
-            {children}
-          </RoomProvider>
-        </UserProvider>
+        <NextIntlClientProvider messages={messages}>
+          <UserProvider>
+            <RoomProvider>
+              {children}
+            </RoomProvider>
+          </UserProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

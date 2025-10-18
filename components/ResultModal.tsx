@@ -3,6 +3,7 @@
 import { useRoom } from '@/contexts/RoomContext';
 import type { Option, ResultData } from '@/types';
 import { AnimatePresence, motion } from 'framer-motion';
+import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
 
 interface ResultModalProps {
@@ -11,6 +12,7 @@ interface ResultModalProps {
 }
 
 export default function ResultModal({ result, options }: ResultModalProps) {
+  const t = useTranslations('result');
   const { restartRoom } = useRoom();
 
   const selectedOption = options.find((o) => o.id === result.option_id);
@@ -67,7 +69,7 @@ export default function ResultModal({ result, options }: ResultModalProps) {
                 isWinner ? 'text-orange-600' : 'text-red-600'
               }`}
             >
-              {isWinner ? 'Kazanan!' : 'Kaybeden!'}
+              {isWinner ? t('winnerTitle') : t('loserTitle')}
             </motion.h2>
 
             <motion.div
@@ -93,7 +95,7 @@ export default function ResultModal({ result, options }: ResultModalProps) {
                 onClick={restartRoom}
                 className="w-full px-6 py-3 bg-orange-500 text-white rounded-xl font-semibold hover:bg-orange-600 transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
               >
-                🔄 Tekrar Başlat
+                🔄 {t('restart')}
               </button>
             </motion.div>
           </div>

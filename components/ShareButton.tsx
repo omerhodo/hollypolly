@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
 interface ShareButtonProps {
@@ -8,6 +9,7 @@ interface ShareButtonProps {
 }
 
 export default function ShareButton({ roomId }: ShareButtonProps) {
+  const t = useTranslations('share');
   const [copied, setCopied] = useState(false);
 
   const handleShare = async () => {
@@ -31,12 +33,12 @@ export default function ShareButton({ roomId }: ShareButtonProps) {
     >
       {copied ? (
         <>
-          <span>✓ Kopyalandı!</span>
+          <span>✓ {t('copied')}</span>
         </>
       ) : (
         <>
           <span>🔗</span>
-          <span>Kuraya katılacak kişilerle linki paylaş</span>
+          <span>{t('button')}</span>
         </>
       )}
     </motion.button>

@@ -1,35 +1,52 @@
 {
   "loading": {
-    "title": "Odanız Hazırlanıyor...",
-    "subtitle": "Lütfen bekleyin, sizi yönlendiriyoruz"
+    "title": "Kura çekilecek odaya yönlendiriliyorsunuz...",
+    "subtitle": "Lütfen bekleyin, sizi yönlendiriyoruz",
+    "roomLoading": "Kura çekme odası yükleniyor..."
   },
   "room": {
     "title": "HollyPolly",
-    "code": "Oda Kodu",
+    "code": "Kura Çekme Odası Kodu",
+    "drawName": "Kura Adı",
     "participants": "Katılımcılar",
-    "noParticipants": "Henüz katılımcı yok",
+    "noParticipants": "Henüz başka katılımcı yok. Kura çekme odası linkini paylaşın!",
     "you": "Siz",
     "makeAdmin": "Admin Yap",
     "admin": "Admin",
-    "joinedAt": "Katıldı"
+    "editName": "İsmi düzenle"
   },
   "options": {
     "title": "Seçenekler",
     "addPlaceholder": "Yeni seçenek ekle...",
     "add": "Ekle",
-    "noOptions": "Henüz seçenek eklenmedi",
-    "addToStart": "Seçenek ekleyerek başlayın"
+    "noOptions": "Seçenek ekleyerek başlayın",
+    "delete": "Sil"
   },
   "result": {
     "title": "Sonuç Seç",
-    "winner": "Kazanan",
-    "loser": "Kaybeden",
+    "description": "Butona tıklayınca seçenekler arasından rastgele kazanan veya kaybeden seçilir",
+    "selectWinner": "Kazanan Seç",
+    "selectLoser": "Kaybeden Seç",
     "restart": "Tekrar Başlat",
     "winnerTitle": "Kazanan!",
     "loserTitle": "Kaybeden!"
   },
   "share": {
-    "button": "Oda Linkini Paylaş",
+    "button": "Kuraya katılacak kişilerle linki paylaş",
     "copied": "Kopyalandı!"
+  },
+  "entrance": {
+    "welcome": "Hoş Geldin!",
+    "createDraw": "Kuranızı oluşturun",
+    "joinDraw": "Kuraya dahil olmak için isminizi girin",
+    "joiningDraw": "Kuraya dahil oluyorsunuz",
+    "drawTitle": "Kuranın Başlığı",
+    "drawTitlePlaceholder": "Örn: Yemek Seçimi, Film Kuraları...",
+    "yourName": "İsminiz",
+    "namePlaceholder": "İsminizi yazın...",
+    "characters": "karakter",
+    "createButton": "Kurayı Oluştur 🎯",
+    "joinButton": "Kuraya Katıl 🚀",
+    "nameVisibleNote": "İsminiz diğer katılımcılar tarafından görülecektir"
   }
 }

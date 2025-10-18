@@ -1,35 +1,52 @@
 {
   "loading": {
-    "title": "Preparing Your Room...",
-    "subtitle": "Please wait, redirecting you"
+    "title": "Redirecting to lottery room...",
+    "subtitle": "Please wait, redirecting you",
+    "roomLoading": "Lottery room loading..."
   },
   "room": {
     "title": "HollyPolly",
     "code": "Room Code",
+    "drawName": "Draw Name",
     "participants": "Participants",
-    "noParticipants": "No participants yet",
+    "noParticipants": "No other participants yet. Share the lottery room link!",
     "you": "You",
     "makeAdmin": "Make Admin",
     "admin": "Admin",
-    "joinedAt": "Joined"
+    "editName": "Edit name"
   },
   "options": {
     "title": "Options",
     "addPlaceholder": "Add new option...",
     "add": "Add",
-    "noOptions": "No options yet",
-    "addToStart": "Add options to start"
+    "noOptions": "Start by adding options",
+    "delete": "Delete"
   },
   "result": {
     "title": "Select Result",
-    "winner": "Winner",
-    "loser": "Loser",
+    "description": "Click the button to randomly select a winner or loser from the options",
+    "selectWinner": "Select Winner",
+    "selectLoser": "Select Loser",
     "restart": "Restart",
     "winnerTitle": "Winner!",
     "loserTitle": "Loser!"
   },
   "share": {
-    "button": "Share Room Link",
+    "button": "Share the link with people joining the lottery",
     "copied": "Copied!"
+  },
+  "entrance": {
+    "welcome": "Welcome!",
+    "createDraw": "Create your lottery",
+    "joinDraw": "Enter your name to join the lottery",
+    "joiningDraw": "Joining the lottery",
+    "drawTitle": "Draw Title",
+    "drawTitlePlaceholder": "E.g. Food Choice, Movie Lottery...",
+    "yourName": "Your Name",
+    "namePlaceholder": "Enter your name...",
+    "characters": "characters",
+    "createButton": "Create Lottery",
+    "joinButton": "Join Lottery",
+    "nameVisibleNote": "Your name will be visible to other participants"
   }
 }

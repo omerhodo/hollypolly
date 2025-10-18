@@ -4,6 +4,7 @@ import { useRoom } from '@/contexts/RoomContext';
 import { useUser } from '@/contexts/UserContext';
 import type { User } from '@/types';
 import { motion } from 'framer-motion';
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { useState } from 'react';
 
@@ -13,6 +14,7 @@ interface UserListProps {
 }
 
 export default function UserList({ users, currentUser }: UserListProps) {
+  const t = useTranslations('room');
   const { makeAdmin } = useRoom();
   const { updateUserName } = useUser();
   const [isEditingName, setIsEditingName] = useState(false);
@@ -36,7 +38,7 @@ export default function UserList({ users, currentUser }: UserListProps) {
   return (
     <div className="bg-white rounded-2xl shadow-lg p-6">
       <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-        👥 Katılımcılar
+        👥 {t('participants')}
         <span className="text-sm font-normal text-gray-500">({users.length})</span>
       </h2>
 
@@ -88,14 +90,14 @@ export default function UserList({ users, currentUser }: UserListProps) {
                   <div className="flex items-center gap-2">
                     <p className="font-semibold text-gray-800">{currentUser.name}</p>
                     {currentUser.is_admin && (
-                      <span className="text-yellow-500" title="Admin">
+                      <span className="text-yellow-500" title={t('admin')}>
                         👑
                       </span>
                     )}
                     <button
                       onClick={() => setIsEditingName(true)}
                       className="text-xs text-orange-600 hover:text-orange-800"
-                      title="İsmi düzenle"
+                      title={t('editName')}
                     >
                       ✏️
                     </button>
@@ -103,7 +105,7 @@ export default function UserList({ users, currentUser }: UserListProps) {
                 )}
                 <div className="flex items-center gap-2">
                   <span className="text-xs bg-orange-600 text-white px-2 py-0.5 rounded-full font-semibold">
-                    Siz
+                    {t('you')}
                   </span>
                   <p className="text-xs text-gray-500">
                     {new Date(currentUser.joined_at).toLocaleTimeString('tr-TR', {
@@ -142,7 +144,7 @@ export default function UserList({ users, currentUser }: UserListProps) {
                   <div className="flex items-center gap-2">
                     <p className="font-semibold text-gray-800">{user.name}</p>
                     {user.is_admin && (
-                      <span className="text-yellow-500" title="Admin">
+                      <span className="text-yellow-500" title={t('admin')}>
                         👑
                       </span>
                     )}
@@ -161,7 +163,7 @@ export default function UserList({ users, currentUser }: UserListProps) {
                   onClick={() => handleMakeAdmin(user.id)}
                   className="text-xs bg-orange-200 hover:bg-orange-300 text-orange-800 px-3 py-1 rounded-full transition-colors"
                 >
-                  Admin Yap
+                  {t('makeAdmin')}
                 </button>
               )}
             </motion.div>
@@ -169,7 +171,7 @@ export default function UserList({ users, currentUser }: UserListProps) {
 
         {users.filter((user) => user.id !== currentUser?.id).length === 0 && (
           <div className="text-center py-8 text-gray-400">
-            Henüz başka katılımcı yok. Kura çekme odası linkini paylaşın!
+            {t('noParticipants')}
           </div>
         )}
       </div>

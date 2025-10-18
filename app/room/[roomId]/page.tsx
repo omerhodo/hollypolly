@@ -9,10 +9,12 @@ import { useRoom } from '@/contexts/RoomContext';
 import { useUser } from '@/contexts/UserContext';
 import { supabase } from '@/lib/supabase/client';
 import { motion } from 'framer-motion';
+import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 export default function RoomPage() {
+  const t = useTranslations();
   const params = useParams();
   const roomId = params.roomId as string;
   const { currentUser, initializeUser } = useUser();
@@ -175,7 +177,7 @@ export default function RoomPage() {
           className="text-center"
         >
           <div className="w-16 h-16 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-gray-600">Kura çekme odası yükleniyor...</p>
+          <p className="text-gray-600">{t('loading.roomLoading')}</p>
         </motion.div>
       </div>
     );
@@ -193,10 +195,10 @@ export default function RoomPage() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold text-gray-800 mb-2">
-                🎪 HollyPolly
+                🎪 {t('room.title')}
               </h1>
               <p className="text-gray-600 text-sm">
-                Kura Çekme Odası Kodu: <span className="font-mono bg-gray-100 px-2 py-1 rounded">{roomId.slice(0, 8)}</span>
+                {t('room.code')}: <span className="font-mono bg-gray-100 px-2 py-1 rounded">{roomId.slice(0, 8)}</span>
               </p>
             </div>
             <ShareButton roomId={roomId} />

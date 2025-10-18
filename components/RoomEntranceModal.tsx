@@ -1,6 +1,7 @@
 'use client';
 
 import { AnimatePresence, motion } from 'framer-motion';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
 interface RoomEntranceModalProps {
@@ -11,6 +12,8 @@ interface RoomEntranceModalProps {
 }
 
 export default function RoomEntranceModal({ isOpen, onSubmit, isAdmin, existingTitle }: RoomEntranceModalProps) {
+  const t = useTranslations('entrance');
+  const tRoom = useTranslations('room');
   const [name, setName] = useState('');
   const [title, setTitle] = useState('');
 
@@ -42,15 +45,15 @@ export default function RoomEntranceModal({ isOpen, onSubmit, isAdmin, existingT
             >
               <div className="text-center mb-6">
                 <div className="text-6xl mb-4">👋</div>
-                <h2 className="text-3xl font-bold text-gray-800 mb-2">Hoş Geldin!</h2>
+                <h2 className="text-3xl font-bold text-gray-800 mb-2">{t('welcome')}</h2>
                 {existingTitle && !isAdmin ? (
                   <div className="mt-3">
                     <div className="inline-block px-4 py-2 bg-gradient-to-r from-orange-50 to-orange-100 rounded-xl border-2 border-orange-200">
-                      <h3 className="text-md font-bold text-center text-gray-600">🎯 Kuraya dahil oluyorsunuz: <span className="font-mono text-xl font-bold text-orange-600">{existingTitle}</span></h3>
+                      <h3 className="text-md font-bold text-center text-gray-600">🎯 {t('joiningDraw')}: <span className="font-mono text-xl font-bold text-orange-600">{existingTitle}</span></h3>
                     </div>
                   </div>
                 ) : (
-                  <p className="text-gray-600">{isAdmin ? 'Kuranızı oluşturun' : 'Kuraya dahil olmak için isminizi girin'}</p>
+                  <p className="text-gray-600">{isAdmin ? t('createDraw') : t('joinDraw')}</p>
                 )}
               </div>
 
@@ -58,37 +61,37 @@ export default function RoomEntranceModal({ isOpen, onSubmit, isAdmin, existingT
                 {isAdmin && (
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Kuranın Başlığı
+                      {t('drawTitle')}
                     </label>
                     <input
                       type="text"
                       value={title}
                       onChange={(e) => setTitle(e.target.value)}
-                      placeholder="Örn: Yemek Seçimi, Film Kuraları..."
+                      placeholder={t('drawTitlePlaceholder')}
                       maxLength={50}
                       autoFocus
                       className="w-full px-4 py-3 border-2 border-stone-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-orange-600 placeholder:text-stone-400 text-lg"
                     />
                     <p className="text-xs text-gray-500 mt-2">
-                      {title.length}/50 karakter
+                      {title.length}/50 {t('characters')}
                     </p>
                   </div>
                 )}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    İsminiz
+                    {t('yourName')}
                   </label>
                   <input
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="İsminizi yazın..."
+                    placeholder={t('namePlaceholder')}
                     maxLength={30}
                     autoFocus={!isAdmin}
                     className="w-full px-4 py-3 border-2 border-stone-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-orange-600 placeholder:text-stone-400 text-lg"
                   />
                   <p className="text-xs text-gray-500 mt-2">
-                    {name.length}/30 karakter
+                    {name.length}/30 {t('characters')}
                   </p>
                 </div>
 
@@ -97,12 +100,12 @@ export default function RoomEntranceModal({ isOpen, onSubmit, isAdmin, existingT
                   disabled={!name.trim() || (isAdmin && !title.trim())}
                   className="w-full py-3 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:from-orange-500 disabled:hover:to-orange-600"
                 >
-                  {isAdmin ? 'Kurayı Oluştur 🎯' : 'Kuraya Katıl 🚀'}
+                  {isAdmin ? t('createButton') : t('joinButton')}
                 </button>
               </form>
 
               <p className="text-xs text-center text-gray-400 mt-4">
-                İsminiz diğer katılımcılar tarafından görülecektir
+                {t('nameVisibleNote')}
               </p>
             </motion.div>
           </div>
