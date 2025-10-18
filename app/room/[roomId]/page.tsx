@@ -35,9 +35,25 @@ export default function RoomPage() {
       try {
         await initializeRoom(roomId);
 
+        // Eğer currentUser zaten bu odada ise, direkt devam et
         if (currentUser && currentUser.room_id === roomId) {
-          setInitializing(false);
-          return;
+          // Veritabanında hala var mı kontrol et
+          const { data: existingUser } = await supabase
+            .from('users')
+            .select('*')
+            .eq('id', currentUser.id)
+            .eq('room_id', roomId)
+            .single();
+
+          if (existingUser) {
+            console.log('✅ User already in room, no modal needed');
+            setInitializing(false);
+            return;
+          } else {
+            await initializeUser(roomId, currentUser.name);
+            setInitializing(false);
+            return;
+          }
         }
 
         const storedUser = localStorage.getItem('hollypolly_user');
@@ -53,13 +69,21 @@ export default function RoomPage() {
                 .single();
 
               if (existingUser) {
+                console.log('✅ User exists in DB, setting currentUser directly');
+                // Kullanıcı zaten DB'de var, sadece state'e set et
                 await initializeUser(roomId, user.name);
                 setInitializing(false);
                 return;
               } else {
-                console.log('🗑️ User not in DB, clearing storage');
-                localStorage.removeItem('hollypolly_user');
+                console.log('🔄 User not in DB, re-adding from localStorage');
+                // DB'de yok, yeniden ekle
+                await initializeUser(roomId, user.name);
+                setInitializing(false);
+                return;
               }
+            } else if (user.room_id !== roomId) {
+              console.log('🔄 User from different room, clearing storage');
+              localStorage.removeItem('hollypolly_user');
             }
           } catch (e) {
             console.error('Error checking stored user:', e);
@@ -67,6 +91,7 @@ export default function RoomPage() {
           }
         }
 
+        // Kullanıcı yok, modal göster
         const { count } = await supabase
           .from('users')
           .select('id', { count: 'exact', head: true })
@@ -87,7 +112,7 @@ export default function RoomPage() {
     return () => {
       isMounted = false;
     };
-  }, [roomId, currentUser]);
+  }, [roomId]);
 
   const handleNameSubmit = async (name: string, title: string) => {
     setUserName(name);
@@ -134,7 +159,6 @@ export default function RoomPage() {
       }).catch(() => {
         supabase.from('users').delete().eq('id', currentUser.id);
       });
-      localStorage.removeItem('hollypolly_user');
     };
 
     window.addEventListener('beforeunload', handleBeforeUnload);
@@ -142,8 +166,6 @@ export default function RoomPage() {
     return () => {
       clearInterval(interval);
       window.removeEventListener('beforeunload', handleBeforeUnload);
-      supabase.from('users').delete().eq('id', currentUser.id);
-      localStorage.removeItem('hollypolly_user');
     };
   }, [currentUser]);
 

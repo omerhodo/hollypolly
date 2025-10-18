@@ -82,13 +82,23 @@ export function UserProvider({ children }: { children: ReactNode }) {
       try {
         const user: User = JSON.parse(storedUser);
         if (user.room_id === roomId) {
-          const { data: existingUser } = await supabase
+          // Önce DB'de var mı kontrol et
+          const { data: existingUser, error: selectError } = await supabase
             .from('users')
             .select('*')
             .eq('id', user.id)
+            .eq('room_id', roomId)
             .single();
 
-          if (!existingUser) {
+          if (existingUser && !selectError) {
+            // Kullanıcı zaten DB'de var, sadece state'e set et
+            console.log('✅ User already in DB, just setting state');
+            setCurrentUser(existingUser as User);
+            localStorage.setItem('hollypolly_user', JSON.stringify(existingUser));
+            return existingUser as User;
+          } else {
+            // DB'de yok, yeniden ekle
+            console.log('🔄 Re-adding user to DB');
             const { count } = await supabase
               .from('users')
               .select('id', { count: 'exact', head: true })
@@ -97,16 +107,18 @@ export function UserProvider({ children }: { children: ReactNode }) {
             const shouldBeAdmin = count === 0 || count === null;
             const userToInsert = { ...user, is_admin: shouldBeAdmin, last_seen: new Date().toISOString() };
 
-            const { error } = await supabase.from('users').insert(userToInsert);
-            if (!error) {
-              setCurrentUser(userToInsert);
-              localStorage.setItem('hollypolly_user', JSON.stringify(userToInsert));
-              return userToInsert;
+            // upsert kullanarak duplicate insert'i önle
+            const { data: insertedUser, error } = await supabase
+              .from('users')
+              .upsert(userToInsert, { onConflict: 'id' })
+              .select()
+              .single();
+
+            if (!error && insertedUser) {
+              setCurrentUser(insertedUser as User);
+              localStorage.setItem('hollypolly_user', JSON.stringify(insertedUser));
+              return insertedUser as User;
             }
-          } else {
-            setCurrentUser(existingUser as User);
-            localStorage.setItem('hollypolly_user', JSON.stringify(existingUser));
-            return existingUser as User;
           }
         } else {
           localStorage.removeItem('hollypolly_user');
@@ -148,14 +160,26 @@ export function UserProvider({ children }: { children: ReactNode }) {
       throw error;
     }
 
-    const { error: optionError } = await supabase.from('options').insert({
-      room_id: roomId,
-      text: userName,
-    });
+    // Aynı isimde option zaten var mı kontrol et
+    const { data: existingOption } = await supabase
+      .from('options')
+      .select('id')
+      .eq('room_id', roomId)
+      .eq('text', userName)
+      .single();
 
-    if (optionError) {
-      console.error('⚠️ Error creating user option:', optionError);
-      // Option hatası kullanıcı oluşturmayı engellemez
+    if (!existingOption) {
+      const { error: optionError } = await supabase.from('options').insert({
+        room_id: roomId,
+        text: userName,
+      });
+
+      if (optionError) {
+        console.error('⚠️ Error creating user option:', optionError);
+        // Option hatası kullanıcı oluşturmayı engellemez
+      }
+    } else {
+      console.log('✅ Option already exists for user:', userName);
     }
 
     setCurrentUser(newUser);

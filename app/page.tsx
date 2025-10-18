@@ -11,6 +11,8 @@ export default function HomePage() {
   const router = useRouter();
 
   useEffect(() => {
+    localStorage.removeItem('hollypolly_user');
+
     const timer = setTimeout(() => {
       const roomId = uuidv4();
       router.push(`/room/${roomId}`);
