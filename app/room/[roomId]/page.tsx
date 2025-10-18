@@ -106,7 +106,7 @@ export default function RoomPage() {
     const updateHeartbeat = async () => {
       await supabase
         .from('users')
-        .update({ last_seen: new Date().toISOString() })
+        .update({ last_seen: new Date().toISOString() } as any)
         .eq('id', currentUser.id);
     };
 
@@ -143,27 +143,6 @@ export default function RoomPage() {
       console.log('👤 Current user confirmed', { id: currentUser.id, isAdmin: currentUser.is_admin });
     }
   }, [currentUser, room, roomId]);
-
-  useEffect(() => {
-    if (!currentUser) return;
-
-    const updateHeartbeat = async () => {
-      await supabase
-        .from('users')
-        .update({ last_seen: new Date().toISOString() })
-        .eq('id', currentUser.id);
-    };
-
-    updateHeartbeat();
-
-    const interval = setInterval(updateHeartbeat, 30000);
-
-    return () => {
-      clearInterval(interval);
-      supabase.from('users').delete().eq('id', currentUser.id);
-      localStorage.removeItem('hollypolly_user');
-    };
-  }, [currentUser]);
 
   if (showNameModal && !initializing && !currentUser) {
     return <NameInputModal isOpen={showNameModal} onSubmit={handleNameSubmit} />;
