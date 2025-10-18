@@ -30,7 +30,7 @@ export default function OptionList({ options, users, currentUser, roomTitle }: O
       <div className="mb-6">
         {roomTitle && (
           <div className="mb-4 p-4 bg-gradient-to-r from-orange-50 to-orange-100 rounded-xl border-2 border-orange-200">
-            <h3 className="text-xl font-bold text-orange-600 text-center">🎯 {roomTitle}</h3>
+            <h3 className="text-md font-bold text-center text-gray-600">🎯 Kura Adı: <span className="font-mono text-xl font-bold text-orange-600">{roomTitle}</span></h3>
           </div>
         )}
         <h2 className="text-2xl font-bold text-gray-800 mb-4">📝 Seçenekler</h2>

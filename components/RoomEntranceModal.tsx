@@ -45,9 +45,8 @@ export default function RoomEntranceModal({ isOpen, onSubmit, isAdmin, existingT
                 <h2 className="text-3xl font-bold text-gray-800 mb-2">Hoş Geldin!</h2>
                 {existingTitle && !isAdmin ? (
                   <div className="mt-3">
-                    <p className="text-gray-600 mb-2">Kuraya dahil oluyorsunuz:</p>
                     <div className="inline-block px-4 py-2 bg-gradient-to-r from-orange-50 to-orange-100 rounded-xl border-2 border-orange-200">
-                      <p className="text-lg font-bold text-orange-600">🎯 {existingTitle}</p>
+                      <h3 className="text-md font-bold text-center text-gray-600">🎯 Kuraya dahil oluyorsunuz: <span className="font-mono text-xl font-bold text-orange-600">{existingTitle}</span></h3>
                     </div>
                   </div>
                 ) : (
