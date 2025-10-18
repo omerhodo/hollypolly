@@ -66,7 +66,8 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key_here
 ```bash
 npm run dev
 ```
-Uygulama: [http://localhost:3000](http://localhost:3000)
+Uygulama: [https://hollypolly.netlify.app/](https://hollypolly.netlify.app/)
+
 
 ---
 
@@ -117,8 +118,8 @@ hollypolly/
 
 ## 🌍 Dil Desteği
 URL’ye dil kodu ekleyin:
-- Türkçe: `http://localhost:3000/tr`
-- İngilizce: `http://localhost:3000/en`
+- Türkçe: `https://hollypolly.netlify.app//tr`
+- İngilizce: `https://hollypolly.netlify.app//en`
 
 ---
 
@@ -204,7 +205,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key_here
 ```bash
 npm run dev
 ```
-Open [http://localhost:3000](http://localhost:3000)
+Open [https://hollypolly.netlify.app/](https://hollypolly.netlify.app/)
 
 ---
 
@@ -255,8 +256,8 @@ hollypolly/
 
 ## 🌍 Language Support
 Use URL language codes:
-- Turkish: `http://localhost:3000/tr`
-- English: `http://localhost:3000/en`
+- Turkish: `https://hollypolly.netlify.app//tr`
+- English: `https://hollypolly.netlify.app//en`
 
 ---
 
@@ -280,4 +281,4 @@ netlify deploy --prod
 ---
 
 ## 📝 License
-MIT © [Ömer Hod](https://xhodo.com/)
+MIT © [Ömer Hodo](https://xhodo.com/)
