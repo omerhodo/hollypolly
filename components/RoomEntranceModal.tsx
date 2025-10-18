@@ -52,7 +52,7 @@ export default function RoomEntranceModal({ isOpen, onSubmit, isAdmin, existingT
                     </div>
                   </div>
                 ) : (
-                  <p className="text-gray-600">{isAdmin ? t('createDraw') : t('joinDraw')}</p>
+                  <p className="text-gray-600 text-xl">{isAdmin ? t('createDraw') : t('joinDraw')}</p>
                 )}
               </div>
 
