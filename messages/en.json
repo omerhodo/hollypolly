@@ -1,0 +1,35 @@
+{
+  "loading": {
+    "title": "Preparing Your Room...",
+    "subtitle": "Please wait, redirecting you"
+  },
+  "room": {
+    "title": "HollyPolly",
+    "code": "Room Code",
+    "participants": "Participants",
+    "noParticipants": "No participants yet",
+    "you": "You",
+    "makeAdmin": "Make Admin",
+    "admin": "Admin",
+    "joinedAt": "Joined"
+  },
+  "options": {
+    "title": "Options",
+    "addPlaceholder": "Add new option...",
+    "add": "Add",
+    "noOptions": "No options yet",
+    "addToStart": "Add options to start"
+  },
+  "result": {
+    "title": "Select Result",
+    "winner": "Winner",
+    "loser": "Loser",
+    "restart": "Restart",
+    "winnerTitle": "Winner!",
+    "loserTitle": "Loser!"
+  },
+  "share": {
+    "button": "Share Room Link",
+    "copied": "Copied!"
+  }
+}

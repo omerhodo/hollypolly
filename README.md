@@ -1,36 +1,134 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# HollyPolly - Gerçek Zamanlı Oda Seçim Uygulaması
 
-## Getting Started
+Arkadaşlarınla gerçek zamanlı olarak karar ver! Oda oluştur, katılımcıları davet et, kazanan veya kaybedeni seç.
 
-First, run the development server:
+## 🚀 Özellikler
+
+- ✨ Gerçek zamanlı oda yönetimi
+- 👥 Dinamik kullanıcı listesi
+- ✏️ İsim düzenleme (kullanıcılar kendi isimlerini değiştirebilir)
+- 👑 Admin sistemi (ilk gelen admin, admin başkasını admin yapabilir)
+- 🗑️ Otomatik oda temizleme (son kullanıcı çıkınca oda silinir)
+- 🎯 Kazanan/Kaybeden seçimi
+- 🔄 Tekrar başlat özelliği
+- 🌍 Çoklu dil desteği (TR/EN)
+- 📱 Responsive tasarım
+- 🎨 Framer Motion animasyonları
+- 🔗 Kolay oda paylaşımı
+
+## 🛠️ Teknolojiler
+
+- **Framework:** Next.js 14 (App Router)
+- **Styling:** Tailwind CSS
+- **Database:** Supabase (PostgreSQL + Realtime)
+- **State Management:** Context API
+- **Animations:** Framer Motion
+- **i18n:** next-intl
+- **Deployment:** Netlify
+
+## 📦 Kurulum
+
+### 1. Bağımlılıkları yükleyin
+
+```bash
+npm install
+```
+
+### 2. Supabase Kurulumu
+
+1. [Supabase](https://supabase.com) hesabı oluşturun
+2. Yeni bir proje oluşturun
+3. SQL Editor'de `supabase/schema.sql` dosyasını çalıştırın
+   - Bu adım tabloları, RLS politikalarını VE Realtime'ı otomatik kurar ✅
+4. Project Settings > API'den URL ve anon key'i kopyalayın
+
+### 3. Environment Variables
+
+`.env.local` dosyasını oluşturun:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url_here
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key_here
+```
+
+### 4. Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Tarayıcınızda [http://localhost:3000](http://localhost:3000) adresini açın.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🎮 Kullanım
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Ana sayfaya girin, otomatik olarak yeni bir oda oluşturulur
+2. Oda linkini kopyalayıp arkadaşlarınızla paylaşın
+3. İlk katılan kişi otomatik admin olur
+4. Admin, seçenekler ekleyebilir ve sonuç seçebilir
+5. Tüm değişiklikler gerçek zamanlı olarak herkese yansır
 
-## Learn More
+## 📁 Proje Yapısı
 
-To learn more about Next.js, take a look at the following resources:
+```
+hollypolly/
+├── app/
+│   ├── room/[roomId]/page.tsx    # Oda sayfası
+│   ├── layout.tsx                 # Root layout
+│   └── page.tsx                   # Ana sayfa (loading)
+├── components/
+│   ├── UserList.tsx              # Kullanıcı listesi
+│   ├── OptionList.tsx            # Seçenek listesi
+│   ├── ResultModal.tsx           # Sonuç modalı
+│   └── ShareButton.tsx           # Paylaşım butonu
+├── contexts/
+│   ├── UserContext.tsx           # Kullanıcı state
+│   └── RoomContext.tsx           # Oda state + Realtime
+├── lib/
+│   └── supabase/
+│       ├── client.ts             # Supabase client
+│       └── database.types.ts     # TypeScript types
+├── messages/
+│   ├── tr.json                   # Türkçe çeviriler
+│   └── en.json                   # İngilizce çeviriler
+└── supabase/
+    └── schema.sql                # Veritabanı şeması
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🔄 Realtime Event Flow
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **users.onInsert:** Yeni kullanıcı katıldığında liste güncellenir
+- **users.onUpdate:** Admin değişikliği anında yansır
+- **options.onInsert:** Yeni seçenek herkese gönderilir
+- **rooms.onUpdate:** Sonuç seçildiğinde modal açılır
 
-## Deploy on Vercel
+## 🌍 Çoklu Dil Desteği
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Dil değiştirmek için URL'de dil kodunu kullanın:
+- Türkçe: `http://localhost:3000/tr`
+- İngilizce: `http://localhost:3000/en`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🚀 Deployment (Netlify)
+
+### Otomatik Deployment
+
+1. GitHub'a push edin
+2. Netlify'da "New site from Git" seçin
+3. Repository'yi seçin
+4. Environment variables ekleyin:
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+5. Deploy!
+
+### Manuel Deployment
+
+```bash
+npm run build
+netlify deploy --prod
+```
+
+## 📝 Lisans
+
+MIT
+
+## 👨‍💻 Geliştirici
+Ömer Hod - omerhodo@gmail.com

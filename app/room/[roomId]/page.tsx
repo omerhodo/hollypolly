@@ -1,0 +1,235 @@
+'use client';
+
+import NameInputModal from '@/components/NameInputModal';
+import OptionList from '@/components/OptionList';
+import ResultModal from '@/components/ResultModal';
+import ShareButton from '@/components/ShareButton';
+import UserList from '@/components/UserList';
+import { useRoom } from '@/contexts/RoomContext';
+import { useUser } from '@/contexts/UserContext';
+import { supabase } from '@/lib/supabase/client';
+import { motion } from 'framer-motion';
+import { useParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
+
+export default function RoomPage() {
+  const params = useParams();
+  const roomId = params.roomId as string;
+  const { currentUser, initializeUser } = useUser();
+  const { room, users, options, loading, initializeRoom } = useRoom();
+  const [initializing, setInitializing] = useState(true);
+  const [showNameModal, setShowNameModal] = useState(false);
+  const [userName, setUserName] = useState<string | null>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+    let hasInitialized = false;
+
+    const init = async () => {
+      if (!isMounted || hasInitialized) return;
+      hasInitialized = true;
+
+      console.log('🚀 Page init started', { roomId, hasCurrentUser: !!currentUser });
+      setInitializing(true);
+
+      try {
+        await initializeRoom(roomId);
+
+        if (currentUser && currentUser.room_id === roomId) {
+          console.log('✅ Already have currentUser, continuing');
+          setInitializing(false);
+          return;
+        }
+
+        const storedUser = localStorage.getItem('hollypolly_user');
+        if (storedUser) {
+          try {
+            const user = JSON.parse(storedUser);
+            if (user.room_id === roomId && user.name && user.id) {
+              const { data: existingUser } = await supabase
+                .from('users')
+                .select('*')
+                .eq('id', user.id)
+                .eq('room_id', roomId)
+                .single();
+
+              if (existingUser) {
+                console.log('💾 Using existing user from storage');
+                await initializeUser(roomId, user.name);
+                setInitializing(false);
+                return;
+              } else {
+                console.log('🗑️ User not in DB, clearing storage');
+                localStorage.removeItem('hollypolly_user');
+              }
+            }
+          } catch (e) {
+            console.error('Error checking stored user:', e);
+            localStorage.removeItem('hollypolly_user');
+          }
+        }
+
+        setShowNameModal(true);
+        setInitializing(false);
+      } catch (error) {
+        console.error('❌ Error initializing:', error);
+        setInitializing(false);
+      }
+    };
+
+    init();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [roomId, currentUser]);
+
+  const handleNameSubmit = async (name: string) => {
+    console.log('👤 Name submitted:', name);
+    setUserName(name);
+    setShowNameModal(false);
+    setInitializing(true);
+
+    try {
+      await initializeUser(roomId, name);
+      console.log('✅ User initialized with name:', name);
+    } catch (error) {
+      console.error('❌ Error creating user:', error);
+    } finally {
+      setInitializing(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!currentUser) return;
+
+    const updateHeartbeat = async () => {
+      await supabase
+        .from('users')
+        .update({ last_seen: new Date().toISOString() })
+        .eq('id', currentUser.id);
+    };
+
+    updateHeartbeat();
+
+    const interval = setInterval(updateHeartbeat, 30000);
+
+    const handleBeforeUnload = () => {
+      fetch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/users?id=eq.${currentUser.id}`, {
+        method: 'DELETE',
+        headers: {
+          'apikey': process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '',
+          'Content-Type': 'application/json',
+        },
+        keepalive: true,
+      }).catch(() => {
+        supabase.from('users').delete().eq('id', currentUser.id);
+      });
+      localStorage.removeItem('hollypolly_user');
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      supabase.from('users').delete().eq('id', currentUser.id);
+      localStorage.removeItem('hollypolly_user');
+    };
+  }, [currentUser]);
+
+  useEffect(() => {
+    if (currentUser && room && currentUser.room_id === roomId) {
+      console.log('👤 Current user confirmed', { id: currentUser.id, isAdmin: currentUser.is_admin });
+    }
+  }, [currentUser, room, roomId]);
+
+  useEffect(() => {
+    if (!currentUser) return;
+
+    const updateHeartbeat = async () => {
+      await supabase
+        .from('users')
+        .update({ last_seen: new Date().toISOString() })
+        .eq('id', currentUser.id);
+    };
+
+    updateHeartbeat();
+
+    const interval = setInterval(updateHeartbeat, 30000);
+
+    return () => {
+      clearInterval(interval);
+      supabase.from('users').delete().eq('id', currentUser.id);
+      localStorage.removeItem('hollypolly_user');
+    };
+  }, [currentUser]);
+
+  if (showNameModal && !initializing && !currentUser) {
+    return <NameInputModal isOpen={showNameModal} onSubmit={handleNameSubmit} />;
+  }
+
+  if (initializing || loading || !currentUser) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="text-center"
+        >
+          <div className="w-16 h-16 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-gray-600">Kura çekme odası yükleniyor...</p>
+        </motion.div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen p-4 md:p-8">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="max-w-6xl mx-auto"
+      >
+        {/* Header */}
+        <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-800 mb-2">
+                🎪 HollyPolly
+              </h1>
+              <p className="text-gray-600 text-sm">
+                Kura Çekme Odası Kodu: <span className="font-mono bg-gray-100 px-2 py-1 rounded">{roomId.slice(0, 8)}</span>
+              </p>
+            </div>
+            <ShareButton roomId={roomId} />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Sol Panel - Kullanıcılar */}
+          <div className="lg:col-span-1">
+            <UserList users={users} currentUser={currentUser} />
+          </div>
+
+          {/* Sağ Panel - Seçenekler */}
+          <div className="lg:col-span-2">
+            <OptionList
+              options={options}
+              users={users}
+              currentUser={currentUser}
+            />
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Result Modal */}
+      {room?.result && (
+        <ResultModal
+          result={room.result}
+          options={options}
+        />
+      )}
+    </div>
+  );
+}

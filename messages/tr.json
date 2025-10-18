@@ -1,0 +1,35 @@
+{
+  "loading": {
+    "title": "Odanız Hazırlanıyor...",
+    "subtitle": "Lütfen bekleyin, sizi yönlendiriyoruz"
+  },
+  "room": {
+    "title": "HollyPolly",
+    "code": "Oda Kodu",
+    "participants": "Katılımcılar",
+    "noParticipants": "Henüz katılımcı yok",
+    "you": "Siz",
+    "makeAdmin": "Admin Yap",
+    "admin": "Admin",
+    "joinedAt": "Katıldı"
+  },
+  "options": {
+    "title": "Seçenekler",
+    "addPlaceholder": "Yeni seçenek ekle...",
+    "add": "Ekle",
+    "noOptions": "Henüz seçenek eklenmedi",
+    "addToStart": "Seçenek ekleyerek başlayın"
+  },
+  "result": {
+    "title": "Sonuç Seç",
+    "winner": "Kazanan",
+    "loser": "Kaybeden",
+    "restart": "Tekrar Başlat",
+    "winnerTitle": "Kazanan!",
+    "loserTitle": "Kaybeden!"
+  },
+  "share": {
+    "button": "Oda Linkini Paylaş",
+    "copied": "Kopyalandı!"
+  }
+}
