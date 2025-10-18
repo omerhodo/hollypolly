@@ -191,16 +191,18 @@ export function RoomProvider({ children }: { children: ReactNode }) {
   };
 
   const updateRoomTitle = async (title: string) => {
-    if (!room) return;
+    if (!room) {
+      console.error('❌ Cannot update title: room is null');
+      return;
+    }
 
-    const { error } = await supabase
+    console.log('🔄 Updating room title:', { roomId: room.id, title });
+
+    const { data, error } = await supabase
       .from('rooms')
       .update({ title } as any)
-      .eq('id', room.id);
-
-    if (error) {
-      console.error('Error updating room title:', error);
-    }
+      .eq('id', room.id)
+      .select();
   };
 
   useEffect(() => {

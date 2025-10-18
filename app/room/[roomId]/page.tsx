@@ -20,6 +20,7 @@ export default function RoomPage() {
   const [initializing, setInitializing] = useState(true);
   const [showNameModal, setShowNameModal] = useState(false);
   const [userName, setUserName] = useState<string | null>(null);
+  const [isFirstUser, setIsFirstUser] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -54,7 +55,6 @@ export default function RoomPage() {
                 .single();
 
               if (existingUser) {
-                console.log('💾 Using existing user from storage');
                 await initializeUser(roomId, user.name);
                 setInitializing(false);
                 return;
@@ -69,6 +69,13 @@ export default function RoomPage() {
           }
         }
 
+        const { count } = await supabase
+          .from('users')
+          .select('id', { count: 'exact', head: true })
+          .eq('room_id', roomId);
+
+        const willBeAdmin = count === 0 || count === null;
+        setIsFirstUser(willBeAdmin);
         setShowNameModal(true);
         setInitializing(false);
       } catch (error) {
@@ -92,7 +99,7 @@ export default function RoomPage() {
     try {
       await initializeUser(roomId, name);
 
-      if (title && currentUser?.is_admin) {
+      if (title && isFirstUser) {
         await updateRoomTitle(title);
       }
 
@@ -149,7 +156,6 @@ export default function RoomPage() {
   }, [currentUser, room, roomId]);
 
   if (showNameModal && !initializing && !currentUser) {
-    const isFirstUser = users.length === 0;
     return <NameInputModal isOpen={showNameModal} onSubmit={handleNameSubmit} isAdmin={isFirstUser} />;
   }
 
@@ -191,12 +197,10 @@ export default function RoomPage() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Sol Panel - Kullanıcılar */}
           <div className="lg:col-span-1">
             <UserList users={users} currentUser={currentUser} />
           </div>
 
-          {/* Sağ Panel - Seçenekler */}
           <div className="lg:col-span-2">
             <OptionList
               options={options}
@@ -208,7 +212,6 @@ export default function RoomPage() {
         </div>
       </motion.div>
 
-      {/* Result Modal */}
       {room?.result && (
         <ResultModal
           result={room.result}

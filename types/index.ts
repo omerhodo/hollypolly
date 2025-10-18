@@ -13,6 +13,7 @@ export interface Room {
   created_at: string;
   last_activity?: string;
   result: ResultData | null;
+  title?: string;
 }
 
 export interface ResultData {
