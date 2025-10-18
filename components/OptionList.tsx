@@ -29,21 +29,13 @@ export default function OptionList({ options, users, currentUser, roomTitle }: O
 
   return (
     <div className="bg-white rounded-2xl shadow-lg p-6">
-      <div className="mb-6">
-        {roomTitle && (
-          <div className="mb-4 p-4 bg-gradient-to-r from-orange-50 to-orange-100 rounded-xl border-2 border-orange-200">
-            <h3 className="text-md font-bold text-center text-gray-600">🎯 {t('room.drawName')}: <span className="font-mono text-xl font-bold text-orange-600">{roomTitle}</span></h3>
-          </div>
-        )}
-        <h2 className="text-2xl font-bold text-gray-800 mb-4">📝 {t('options.title')}</h2>
-
-        <form onSubmit={handleAddOption} className="mb-4">
+        <form onSubmit={handleAddOption} className="mb-8">
           <div className="flex gap-2">
             <input
               type="text"
               value={newOption}
               onChange={(e) => setNewOption(e.target.value)}
-              placeholder={t('options.addPlaceholder')}
+              placeholder={isAdmin ? t('options.addPlaceholder') : t('options.isNotAdmin')}
               className="flex-1 px-4 py-2 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 text-orange-600 placeholder:text-stone-400"
             />
             <button
@@ -57,6 +49,12 @@ export default function OptionList({ options, users, currentUser, roomTitle }: O
         </form>
 
         <div className="space-y-2">
+          {roomTitle && (
+            <div className="mb-8 p-4 bg-gradient-to-r from-orange-50 to-orange-100 rounded-xl border-2 border-orange-200">
+              <h3 className="text-md font-bold text-center text-gray-600">{t('room.drawName')}: <span className="font-mono text-xl font-bold text-orange-600">{roomTitle}</span></h3>
+            </div>
+          )}
+          <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">📝 {t('options.title')}</h2>
           {options.map((option, index) => (
             <motion.div
               key={option.id}
@@ -84,15 +82,9 @@ export default function OptionList({ options, users, currentUser, roomTitle }: O
             </div>
           )}
         </div>
-      </div>
 
       {isAdmin && options.length > 0 && (
         <div className="border-t pt-6">
-          <h3 className="text-xl font-bold text-gray-800 mb-4">🎯 {t('result.title')}</h3>
-          <p className="text-sm text-gray-600 mb-4">
-            {t('result.description')}
-          </p>
-
           <div className="flex gap-4">
             <button
               onClick={() => selectResult('winner')}
@@ -109,6 +101,14 @@ export default function OptionList({ options, users, currentUser, roomTitle }: O
           </div>
         </div>
       )}
+
+      {
+        !isAdmin && (
+          <div className="text-center text-sm text-stone-500 mt-2">
+            {t('options.waitingAdminForResult')}
+          </div>
+        )
+      }
     </div>
   );
 }

@@ -20,7 +20,9 @@
     "addPlaceholder": "Add new option...",
     "add": "Add",
     "noOptions": "Start by adding options",
-    "delete": "Delete"
+    "delete": "Delete",
+    "isNotAdmin": "Only admins can add options",
+    "waitingAdminForResult": "One of the admins is expected to draw the sweepstakes..."
   },
   "result": {
     "title": "Select Result",
@@ -39,7 +41,7 @@
     "welcome": "Welcome!",
     "createDraw": "Create your lottery",
     "joinDraw": "Enter your name to join the lottery",
-    "joiningDraw": "Joining the lottery",
+    "joiningDraw": "You are joining the lottery named:",
     "drawTitle": "Draw Title",
     "drawTitlePlaceholder": "E.g. Food Choice, Movie Lottery...",
     "yourName": "Your Name",

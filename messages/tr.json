@@ -20,7 +20,9 @@
     "addPlaceholder": "Yeni seçenek ekle...",
     "add": "Ekle",
     "noOptions": "Seçenek ekleyerek başlayın",
-    "delete": "Sil"
+    "delete": "Sil",
+    "isNotAdmin": "Sadece adminler seçenek ekleyebilir",
+    "waitingAdminForResult": "Adminlerden birinin kurayı çekmesi bekleniyor..."
   },
   "result": {
     "title": "Sonuç Seç",
@@ -32,14 +34,14 @@
     "loserTitle": "Kaybeden!"
   },
   "share": {
-    "button": "Kuraya katılacak kişilerle linki paylaş",
+    "button": "Kura linkini paylaş",
     "copied": "Kopyalandı!"
   },
   "entrance": {
     "welcome": "Hoş Geldin!",
     "createDraw": "Kuranızı oluşturun",
     "joinDraw": "Kuraya dahil olmak için isminizi girin",
-    "joiningDraw": "Kuraya dahil oluyorsunuz",
+    "joiningDraw": "Katıldığınız kuranın ismi:",
     "drawTitle": "Kuranın Başlığı",
     "drawTitlePlaceholder": "Kura Başlığı, Örn:Yemek Seçimi, Film Kurası...",
     "yourName": "İsminiz",

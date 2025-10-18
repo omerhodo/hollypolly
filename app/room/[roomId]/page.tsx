@@ -3,7 +3,6 @@
 import OptionList from '@/components/OptionList';
 import ResultModal from '@/components/ResultModal';
 import RoomEntranceModal from '@/components/RoomEntranceModal';
-import ShareButton from '@/components/ShareButton';
 import UserList from '@/components/UserList';
 import { useRoom } from '@/contexts/RoomContext';
 import { useUser } from '@/contexts/UserContext';
@@ -31,15 +30,12 @@ export default function RoomPage() {
     const init = async () => {
       if (!isMounted || hasInitialized) return;
       hasInitialized = true;
-
-      console.log('🚀 Page init started', { roomId, hasCurrentUser: !!currentUser });
       setInitializing(true);
 
       try {
         await initializeRoom(roomId);
 
         if (currentUser && currentUser.room_id === roomId) {
-          console.log('✅ Already have currentUser, continuing');
           setInitializing(false);
           return;
         }
@@ -151,12 +147,6 @@ export default function RoomPage() {
     };
   }, [currentUser]);
 
-  useEffect(() => {
-    if (currentUser && room && currentUser.room_id === roomId) {
-      console.log('👤 Current user confirmed', { id: currentUser.id, isAdmin: currentUser.is_admin });
-    }
-  }, [currentUser, room, roomId]);
-
   if (showNameModal && !initializing && !currentUser) {
     return (
       <RoomEntranceModal
@@ -190,24 +180,9 @@ export default function RoomPage() {
         animate={{ opacity: 1, y: 0 }}
         className="max-w-6xl mx-auto"
       >
-        {/* Header */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-800 mb-2">
-                🎪 {t('room.title')}
-              </h1>
-              <p className="text-gray-600 text-sm">
-                {t('room.code')}: <span className="font-mono bg-gray-100 px-2 py-1 rounded">{roomId.slice(0, 8)}</span>
-              </p>
-            </div>
-            <ShareButton roomId={roomId} />
-          </div>
-        </div>
-
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-1">
-            <UserList users={users} currentUser={currentUser} />
+            <UserList users={users} currentUser={currentUser} roomId={roomId} />
           </div>
 
           <div className="lg:col-span-2">

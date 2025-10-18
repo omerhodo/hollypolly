@@ -7,13 +7,15 @@ import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { useState } from 'react';
+import ShareButton from './ShareButton';
 
 interface UserListProps {
   users: User[];
   currentUser: User | null;
+  roomId: string;
 }
 
-export default function UserList({ users, currentUser }: UserListProps) {
+export default function UserList({ users, currentUser, roomId }: UserListProps) {
   const t = useTranslations('room');
   const { makeAdmin } = useRoom();
   const { updateUserName } = useUser();
@@ -37,8 +39,9 @@ export default function UserList({ users, currentUser }: UserListProps) {
 
   return (
     <div className="bg-white rounded-2xl shadow-lg p-6">
-      <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-        👥 {t('participants')}
+      <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-4 justify-center">
+        <span>👥</span>
+        {t('participants')}
         <span className="text-sm font-normal text-gray-500">({users.length})</span>
       </h2>
 
@@ -121,6 +124,7 @@ export default function UserList({ users, currentUser }: UserListProps) {
       )}
 
       <div className="space-y-3">
+        <div className="mb-8">
         {users
           .filter((user) => user.id !== currentUser?.id)
           .map((user, index) => (
@@ -173,7 +177,9 @@ export default function UserList({ users, currentUser }: UserListProps) {
           <div className="text-center py-8 text-gray-400">
             {t('noParticipants')}
           </div>
-        )}
+          )}
+          </div>
+        <ShareButton roomId={roomId} />
       </div>
     </div>
   );
