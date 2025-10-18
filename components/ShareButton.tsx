@@ -36,7 +36,7 @@ export default function ShareButton({ roomId }: ShareButtonProps) {
       ) : (
         <>
           <span>🔗</span>
-          <span>Kura Çekme Odası Linkini Paylaş</span>
+          <span>Kuraya katılacak kişilerle linki paylaş</span>
         </>
       )}
     </motion.button>
